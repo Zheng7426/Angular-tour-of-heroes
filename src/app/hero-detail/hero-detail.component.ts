@@ -12,7 +12,7 @@ import { HeroService } from '../hero.service';
 })
 export class HeroDetailComponent implements OnInit {
   @Input() hero?: Hero;
-  
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location,
@@ -20,6 +20,13 @@ export class HeroDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getHero();
+  }
+
+  getHero(): void {
+    const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    this.heroService.getHero(id)
+      .subscribe(hero => this.hero = hero);
   }
 
 }

@@ -39,16 +39,31 @@ export class HeroService {
   // getHeroes(): Observable<Hero[]> {
   //   return this.http.get<Hero[]>(this.heroesUrl);
   // }
+  // getHeroes(): Observable<Hero[]> {
+  //   return this.http.get<Hero[]>(this.heroesUrl)
+  //     .pipe(catchError(this.handleError<Hero[]>('getHeroes', []))
+  //   );
+  // }
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl)
-      .pipe(catchError(this.handleError<Hero[]>('getHeroes', []))
-    );
+      .pipe(
+        tap(_ => this.log('fetched heroes')),
+        catchError(this.handleError<Hero[]>('getHeroes', []))
+      );
   }
 
+  // getHero(id: number): Observable<Hero> {
+  //   const hero = HEROES.find(h => h.id === id)!;
+  //   this.log(`fetched hero id=${id}`);
+  //   return of(hero);
+  // }
   getHero(id: number): Observable<Hero> {
-    const hero = HEROES.find(h => h.id === id)!;
-    this.log(`fetched hero id=${id}`);
-    return of(hero);
+    const url = `${this.heroesUrl}/${id}`;
+    return this.http.get<Hero>(url)
+      .pipe(
+        tap(_ => this.log(`fetched hero id=${id}`)),
+        catchError(this.handleError<Hero>(`getHero id=${id}`))
+    );
   }
 
   // Handle Http operation that failed.
